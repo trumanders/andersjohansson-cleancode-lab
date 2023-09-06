@@ -17,7 +17,6 @@ namespace MooGame
 			while (playOn)
 			{
 				string goal = makeGoal();
-
 				
 				Console.WriteLine("New game:\n");
 				//comment out or remove next line to play real games!
