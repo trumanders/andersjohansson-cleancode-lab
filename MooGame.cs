@@ -32,8 +32,7 @@ public class MooGame : IPlayable
         {
             InitializeGame();
             io.PrintString("New game:\n");
-            //comment out or remove next line to play real games!
-            // io.PrintString("For practice, number is: " + Goal + "\n");
+            Console.WriteLine(goal.GoalString);
 
             do
             {
@@ -41,12 +40,8 @@ public class MooGame : IPlayable
                 io.PrintString(GetClueString() + "\n");
             } while (bulls < 4);
 
-            using (StreamWriter output = new StreamWriter("result.txt", append: true))
-            {
-                output.WriteLine(player.Name + "#&#" + player.NumberOfGuesses);
-            }
- 
-            ShowTopList();
+            statistics.SaveScoreToFile(player);
+            statistics.ShowHiScore();
             io.PrintString("Correct, it took " + player.NumberOfGuesses + " guesses\nContinue?");
         } while (io.GetString().ToLower().Substring(0, 1) == "y");
     }
@@ -71,24 +66,7 @@ public class MooGame : IPlayable
             }
         }
         return "BBBB".Substring(0, bulls) + "," + "CCCC".Substring(0, cows);
-    }
-
-    private void ShowTopList()
-    {
-        io.PrintString($"{"Player", -20}{"Games", 5}{"Average", 10}");
-        var showSortedScoreList = File.ReadLines("result.txt")
-            .Select(nameAndScore => nameAndScore.Split("#&#"))
-            .GroupBy(nameAndScore => nameAndScore[0])
-            .ToDictionary(
-                group => group.Key,
-                group => (
-                    times: group.Count(),
-                    average: group.Select(part => int.Parse(part[1])).Average()
-                ))
-            .OrderBy(average => average.Value.average);
-        foreach (var player in showSortedScoreList)
-            io.PrintString($"{player.Key, -20}{player.Value.times, 5}{player.Value.average, 10:F2}");
-    }
+    }   
 
     private void InitializeGame()
     {        

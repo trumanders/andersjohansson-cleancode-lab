@@ -8,7 +8,7 @@ public class Program
 	{
         IIO io = new ConsoleIO();
         Player player = new Player();
-        Statistics statistics = new Statistics();
+        Statistics statistics = new Statistics(io);
         Goal goal = new Goal();
         GoalBuilder goalBuilder = new GoalBuilder();
 
