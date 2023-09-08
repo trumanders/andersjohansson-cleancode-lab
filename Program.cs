@@ -1,62 +1,29 @@
-﻿using System.Diagnostics;
+﻿using andersjohansson_laboration;
 
-namespace MooGame
+namespace MooGame;
+
+public class Program
 {
-	public class Program
+	public static void Main(string[] args)
 	{
-        static IIO io;
-        static IPlayable game;
+        IIO io = new ConsoleIO();
+        Player player = new Player();
+        Statistics statistics = new Statistics();
+        Goal goal = new Goal();
+        GoalBuilder goalBuilder = new GoalBuilder();
 
-		public static void Main(string[] args)
-		{
-            bool playOn = true;
-            io = new ConsoleIO();       // choose implementation
-			
-			io.PrintString("Enter your user name:\n");
-            game = new MooGame(new Player(io.GetString()), io);
-           
-			while (playOn)
-			{
-                 game.Play();				
-			}
-		}
+        io.PrintString("Enter your user name:\n");
+        player.Name = io.GetString();
+
+        var gameDependencies = new GameDependencies()
+        {
+            Io = io,
+            Player = player,
+            Statistics = statistics,
+            Goal = goal,
+            GoalBuilder = goalBuilder,
+        };
+        IPlayable game = new MooGame(gameDependencies);
+        game.Play();	
 	}
-
-	// class PlayerData
-	// {
-	// 	public string Name { get; private set; }
-    //     public int NGames { get; private set; }
-	// 	int totalGuess;
-		
-
-	// 	public PlayerData(string name, int guesses)
-	// 	{
-	// 		this.Name = name;
-	// 		NGames = 1;
-	// 		totalGuess = guesses;
-	// 	}
-
-	// 	public void Update(int guesses)
-	// 	{
-	// 		totalGuess += guesses;
-	// 		NGames++;
-	// 	}
-
-	// 	public double Average()
-	// 	{
-	// 		return (double)totalGuess / NGames;
-	// 	}
-
-		
-	//     public override bool Equals(Object p)
-	// 	{
-	// 		return Name.Equals(((PlayerData)p).Name);
-	// 	}
-
-		
-	//     public override int GetHashCode()
-    //     {
-	// 		return Name.GetHashCode();
-	// 	}
-	// }
 }

@@ -1,3 +1,5 @@
+using andersjohansson_laboration;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
 namespace MooGame;
@@ -5,29 +7,33 @@ namespace MooGame;
 public class MooGame : IPlayable
 {
     private const int GoalLength = 4;
-    private readonly Player player;
-    public string Goal { get; set; } = "";
-
     private int cows = 0;
-    private int bulls = 0;   
+    private int bulls = 0;
 
-    private readonly IIO io;
+    private IIO io;
+    private Statistics statistics;
+    private Player player;
+    private Goal goal;
+    private GoalBuilder goalBuilder;
 
-    public MooGame(Player player, IIO io)
+
+    public MooGame(GameDependencies gameDependencies)
     {
-        this.player = player;
-        this.io = io;
+        this.io = gameDependencies.Io;
+        this.statistics = gameDependencies.Statistics;
+        this.player = gameDependencies.Player;
+        this.goal = gameDependencies.Goal;
+        this.goalBuilder = gameDependencies.GoalBuilder;
     }
 
     public void Play()
     {
-        string answer = "";
         do
         {
-            ResetGame();
+            InitializeGame();
             io.PrintString("New game:\n");
             //comment out or remove next line to play real games!
-            io.PrintString("For practice, number is: " + Goal + "\n");
+            // io.PrintString("For practice, number is: " + Goal + "\n");
 
             do
             {
@@ -41,28 +47,11 @@ public class MooGame : IPlayable
             }
  
             ShowTopList();
-            Console.WriteLine("Correct, it took " + player.NumberOfGuesses + " guesses\nContinue?");
-            answer = io.GetString();
-            answer = answer.ToLower();
-        } while (answer.Substring(0, 1) == "y");
+            io.PrintString("Correct, it took " + player.NumberOfGuesses + " guesses\nContinue?");
+        } while (io.GetString().ToLower().Substring(0, 1) == "y");
     }
 
-    private void SetGoal()
-    {
-        Goal = "";
-        Random randomGenerator = new Random();
-        for (int i = 0; i < 4; i++)
-        {
-            int random = randomGenerator.Next(10);
-            string randomDigit = "" + random;
-            while (Goal.Contains(randomDigit))
-            {
-                random = randomGenerator.Next(10);
-                randomDigit = "" + random;
-            }
-            Goal += randomDigit;
-        }
-    }
+  
 
     private string GetClueString()
     {
@@ -74,7 +63,7 @@ public class MooGame : IPlayable
         {
             for (int j = 0; j < playerGuessLength; j++)
             {
-                if (Goal[i] == player.Guess[j])
+                if (goal.GoalString[i] == player.Guess[j])
                 {
                     if (i == j) bulls++;                    
                     else cows++;                    
@@ -86,8 +75,7 @@ public class MooGame : IPlayable
 
     private void ShowTopList()
     {
-        io.PrintString($"{"Name", -20}{"Score", 5}{"Average", 10}");
-
+        io.PrintString($"{"Player", -20}{"Games", 5}{"Average", 10}");
         var showSortedScoreList = File.ReadLines("result.txt")
             .Select(nameAndScore => nameAndScore.Split("#&#"))
             .GroupBy(nameAndScore => nameAndScore[0])
@@ -97,17 +85,15 @@ public class MooGame : IPlayable
                     times: group.Count(),
                     average: group.Select(part => int.Parse(part[1])).Average()
                 ))
-            .OrderBy(average => average.Value.average);        
-
+            .OrderBy(average => average.Value.average);
         foreach (var player in showSortedScoreList)
-        {
             io.PrintString($"{player.Key, -20}{player.Value.times, 5}{player.Value.average, 10:F2}");
-        }
     }
 
-    private void ResetGame()
+    private void InitializeGame()
     {        
-        SetGoal();
+        
+        goal = new GoalBuilder().SetGoalLength(GoalLength).GenerateRandomGoal().Build();
         player.ResetGame();
     }
 }

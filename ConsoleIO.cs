@@ -1,5 +1,3 @@
-
-
 public class ConsoleIO : IIO
 {
     public string GetString()
@@ -10,10 +8,5 @@ public class ConsoleIO : IIO
     public void PrintString(string input)
     {
         Console.WriteLine(input);
-    }
-
-    public void ClearText()
-    {
-        Console.Clear();
     }
 }

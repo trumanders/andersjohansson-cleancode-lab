@@ -13,7 +13,7 @@ public class Player
     }
 
     private int numberOfGuesses = 0;
-
+    private string guess = "";
     public string Guess
     {
         get { return guess; }
@@ -22,15 +22,7 @@ public class Player
             guess = value;
             numberOfGuesses++;
         }
-    }
-
-    private string guess = "";
-
-    public Player(string name)
-    {
-        this.name = name;
-    }
-
+    } 
     public void ResetGame()
     {
         numberOfGuesses = 0;
