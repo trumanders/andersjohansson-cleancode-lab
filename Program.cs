@@ -2,7 +2,7 @@
 {
 	public static void Main(string[] args)
 	{
-        IIO io = new ConsoleIO("result.txt");
+        IIO io = new ConsoleIO();
         Player player = new Player();
         Statistics statistics = new Statistics(io);
         Goal goal = new Goal();

@@ -1,12 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace andersjohansson_laboration
+﻿
+public class FileManager
 {
-    internal class FileManager
+    private string filePath = "";
+    public FileManager(string filePath)
     {
+        this.filePath = filePath;
+    }
+    public void SaveScoreToFile(Player player)
+    {
+        File.WriteAllText(filePath, player.Name + "#&#" + player.NumberOfGuesses);
+    }
+
+    public string[] GetFileContent()
+    {
+        return File.ReadAllLines(filePath);
     }
 }
