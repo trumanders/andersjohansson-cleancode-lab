@@ -1,9 +1,6 @@
-﻿namespace andersjohansson_laboration;
-
-public class GoalBuilder
+﻿public class GoalBuilder
 {
     private Goal goal;
-
     public GoalBuilder()
     {
         goal = new Goal();

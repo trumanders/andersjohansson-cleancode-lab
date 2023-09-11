@@ -1,26 +1,17 @@
-﻿namespace andersjohansson_laboration;
-
-public class Statistics
+﻿public class Statistics
 {
     private IIO io;
-
     public Statistics(IIO io)
     {
         this.io = io;
     }
 
-    public void SaveScoreToFile(Player player)
-    {
-        using (StreamWriter output = new StreamWriter("result.txt", append: true))
-        {
-            output.WriteLine(player.Name + "#&#" + player.NumberOfGuesses);
-        }
-    }    
 
-    public void ShowHiScore()
+    public void ShowHiScore(string[] fromContent)
     {
         io.PrintString($"{"Player",-20}{"Games",5}{"Average",10}");
-        var showSortedScoreList = File.ReadLines("result.txt")
+
+        var showSortedScoreList = fromContent
             .Select(nameAndScore => nameAndScore.Split("#&#"))
             .GroupBy(nameAndScore => nameAndScore[0])
             .ToDictionary(

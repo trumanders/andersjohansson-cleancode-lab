@@ -1,8 +1,4 @@
-using andersjohansson_laboration;
-using System.Runtime.CompilerServices;
-using System.Runtime.InteropServices;
 
-namespace MooGame;
 
 public class MooGame : IPlayable
 {
@@ -15,7 +11,7 @@ public class MooGame : IPlayable
     private Player player;
     private Goal goal;
     private GoalBuilder goalBuilder;
-
+    private FileManager fileManager;
 
     public MooGame(GameDependencies gameDependencies)
     {
@@ -24,6 +20,7 @@ public class MooGame : IPlayable
         this.player = gameDependencies.Player;
         this.goal = gameDependencies.Goal;
         this.goalBuilder = gameDependencies.GoalBuilder;
+        this.fileManager = gameDependencies.FileManager;
     }
 
     public void Play()
@@ -32,21 +29,17 @@ public class MooGame : IPlayable
         {
             InitializeGame();
             io.PrintString("New game:\n");
-            Console.WriteLine(goal.GoalString);
-
             do
             {
                 player.Guess = io.GetString();
                 io.PrintString(GetClueString() + "\n");
             } while (bulls < 4);
 
-            statistics.SaveScoreToFile(player);
-            statistics.ShowHiScore();
+            fileManager.SaveScoreToFile(player);
+            statistics.ShowHiScore(fileManager.GetFileContent());
             io.PrintString("Correct, it took " + player.NumberOfGuesses + " guesses\nContinue?");
         } while (io.GetString().ToLower().Substring(0, 1) == "y");
-    }
-
-  
+    }  
 
     private string GetClueString()
     {
@@ -69,9 +62,8 @@ public class MooGame : IPlayable
     }   
 
     private void InitializeGame()
-    {        
-        
-        goal = new GoalBuilder().SetGoalLength(GoalLength).GenerateRandomGoal().Build();
+    {             
+        goal = goalBuilder.SetGoalLength(GoalLength).GenerateRandomGoal().Build();
         player.ResetGame();
     }
 }

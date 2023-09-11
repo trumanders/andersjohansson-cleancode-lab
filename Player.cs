@@ -1,7 +1,5 @@
-
 public class Player
-{
-    public string Name
+{    public string Name
     {
         get { return name; }
         set { name = value; }

@@ -1,16 +1,13 @@
-﻿using andersjohansson_laboration;
-
-namespace MooGame;
-
-public class Program
+﻿public class Program
 {
 	public static void Main(string[] args)
 	{
-        IIO io = new ConsoleIO();
+        IIO io = new ConsoleIO("result.txt");
         Player player = new Player();
         Statistics statistics = new Statistics(io);
         Goal goal = new Goal();
         GoalBuilder goalBuilder = new GoalBuilder();
+        FileManager fileManager = new FileManager("result.txt");
 
         io.PrintString("Enter your user name:\n");
         player.Name = io.GetString();

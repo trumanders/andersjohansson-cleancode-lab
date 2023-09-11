@@ -1,5 +1,4 @@
-﻿namespace andersjohansson_laboration;
-
+﻿
 public class GameDependencies
 {
     public IIO Io { get; set; }
@@ -7,4 +6,5 @@ public class GameDependencies
     public Statistics Statistics { get; set; }
     public Goal Goal { get; set; }
     public GoalBuilder GoalBuilder { get; set; }
+    public FileManager FileManager { get; set; }
 }
