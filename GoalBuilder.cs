@@ -14,6 +14,7 @@
 
     public GoalBuilder GenerateRandomGoal()
     {
+        goal.GoalString = "";
         Random random = new Random();
 
         do
@@ -22,7 +23,8 @@
             if (!goal.GoalString.Contains(newRandomDigit))
                 goal.GoalString += newRandomDigit;
         } while (goal.GoalString.Length < goal.GoalLength);
-        return this;    }
+        return this;
+    }
 
 
     public Goal Build()

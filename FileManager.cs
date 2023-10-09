@@ -6,9 +6,9 @@ public class FileManager
     {
         this.filePath = filePath;
     }
-    public void SaveScoreToFile(Player player)
+    public void SaveScoreToFile(IPlayer player)
     {
-        File.WriteAllText(filePath, player.Name + "#&#" + player.NumberOfGuesses);
+        File.AppendAllText(filePath, player.Name + "#&#" + player.NumberOfGuesses + "\n");
     }
 
     public string[] GetFileContent()

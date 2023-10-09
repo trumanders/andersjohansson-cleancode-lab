@@ -4,9 +4,7 @@
     public Statistics(IIO io)
     {
         this.io = io;
-    }
-
-
+    } 
     public void ShowHiScore(string[] fromContent)
     {
         io.PrintString($"{"Player",-20}{"Games",5}{"Average",10}");

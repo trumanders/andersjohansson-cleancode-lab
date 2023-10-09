@@ -1,26 +1,29 @@
 
 
+using System.Reflection.Emit;
+
 public class MooGame : IPlayable
 {
+    private GameDependencies gameDependencies;
     private const int GoalLength = 4;
     private int cows = 0;
     private int bulls = 0;
 
     private IIO io;
-    private Statistics statistics;
     private Player player;
+    private Statistics statistics;
     private Goal goal;
-    private GoalBuilder goalBuilder;
     private FileManager fileManager;
+
+    public MooGame() { }
 
     public MooGame(GameDependencies gameDependencies)
     {
         this.io = gameDependencies.Io;
-        this.statistics = gameDependencies.Statistics;
         this.player = gameDependencies.Player;
+        this.statistics = gameDependencies.Statistics;
         this.goal = gameDependencies.Goal;
-        this.goalBuilder = gameDependencies.GoalBuilder;
-        this.fileManager = gameDependencies.FileManager;
+        fileManager = new FileManager("results.txt");
     }
 
     public void Play()
@@ -32,9 +35,10 @@ public class MooGame : IPlayable
             do
             {
                 player.Guess = io.GetString();
-                io.PrintString(GetClueString() + "\n");
-            } while (bulls < 4);
+                string clueString = GetClueString();
 
+               io.PrintString(clueString + "\n");
+            } while (bulls < 4);
             fileManager.SaveScoreToFile(player);
             statistics.ShowHiScore(fileManager.GetFileContent());
             io.PrintString("Correct, it took " + player.NumberOfGuesses + " guesses\nContinue?");
@@ -46,7 +50,7 @@ public class MooGame : IPlayable
         bulls = 0;
         cows = 0;
         int playerGuessLength = player.Guess.Length;
-        if (playerGuessLength > 4) playerGuessLength = 4;
+        if (playerGuessLength > goal.GoalLength) playerGuessLength = goal.GoalLength;
         for (int i = 0; i < GoalLength; i++)
         {
             for (int j = 0; j < playerGuessLength; j++)
@@ -58,12 +62,12 @@ public class MooGame : IPlayable
                 }
             }
         }
-        return "BBBB".Substring(0, bulls) + "," + "CCCC".Substring(0, cows);
+        return "BBBB".Substring(0, bulls) + "CCCC".Substring(0, cows);
     }   
 
-    private void InitializeGame()
-    {             
-        goal = goalBuilder.SetGoalLength(GoalLength).GenerateRandomGoal().Build();
+    public void InitializeGame()
+    {        
+        goal = new GoalBuilder().SetGoalLength(GoalLength).GenerateRandomGoal().Build();
         player.ResetGame();
     }
 }
